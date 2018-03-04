@@ -32,6 +32,7 @@
 	判断路径是否正确 , 文件是否存在:
 	fs.access(path[, mode], callback)
 	fs.accessSync(path[, mode])
+		- 不光可以判断文件 , 还可以判断文件夹
 
 
 	var fs=require('fs');

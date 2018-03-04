@@ -14,6 +14,7 @@
 		- 异步方法有 ajax , setTimeout(function(){},1000) , 异步一定是后执行的
 			如果有几个同步方法,有几个异步方法,那顺序该如何执行?
 				首先会执行同步方法,异步方法看条件而执行, 没有一个绝对的顺序
+				只有callback才能排序
 
 	异步i/o 与 异步非i/o操作
 		- setimeout setIntval 异步非i/o
