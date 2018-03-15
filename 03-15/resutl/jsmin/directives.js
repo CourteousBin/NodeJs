@@ -1,0 +1,1 @@
+angular.module("Directives",[]).directive("loading",function(){return{restrict:"A",replace:!0,template:'<img src="" alt="" />'}});
