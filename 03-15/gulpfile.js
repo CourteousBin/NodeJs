@@ -131,7 +131,7 @@
 			.pipe(useref())
 			.pipe(gulp.dest('./resutl/useref'))
 	})
-
+	
 	gulp.task('demo',['less','image'],function(){
 		// 依赖 , 就是先回执行less , image 再执行回调函数
 		console.log('demo');
