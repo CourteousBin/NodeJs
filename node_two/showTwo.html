@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+.abc {text-align:right}
+.bbc { padding-top:100px}
+</style>
+</head>
+
+<body>
+<div class="abc">
+<div class="bbc">
+<table border="1" cellpadding="5" cellspacing="0" 
+bgcolor="#F7F7F7"
+width="600"
+align="center">
+<form>
+<tr>
+  <th><li>姓名</li></th>
+  <td align="left" >
+  <input type="text" name="name" placeholder="姓名" required="required"/>
+  <li>出生日期
+  <select name="year">
+  <option value="1990">1980</option>
+  <option value="1991">1990</option>
+  </select>
+  年
+  <select name="month">
+  <option value="12">12</option>
+  <option value="1">1</option>
+  </select>
+  月
+  <select name="day">
+  <option value="3">3</option>
+  <option value="4">4</option>
+  </select>
+  日</li></td>
+</tr>
+<tr>
+  <th><li>身份证号码</li></th>
+  <td align="left" style="color: #8A8A8A;font-size:13px" >
+  <input type="text" maxlength="18" width="250"  required="required"/>长度15位或18位,必须和出生日期,性别相对应</td>
+</tr>
+<tr>
+  <th>性别</th>
+  <td align="left">
+  <select name="sex" style="width:100px; text-align:center">
+  <option value="男" >男</option>
+  <option value="女">女</option>
+  </select>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  民族
+  <select name="believe" style="width:100px">
+  <option value="汉">汉族</option>
+  <option value="其他">其他</option>
+  </select>
+</tr>
+<tr>
+  <th>现职称级别</th>
+  <td align="left"><select name="class" style="width:120px"> 
+      <option value="请选择">-请选择选项-</option>
+      <option value="经理">经理</option>
+      <option value="职员">职员</option>
+      </select></td>
+</tr>
+<tr>
+  <th>从事现职位年限</th>
+  <td align="left"><input type="number" value="1" style="width:50px" min="1" />
+  </td>
+</tr>
+<tr>
+  <td colspan="2" align="center">
+  <input type="submit" name="sure" value="保存以上修改">
+  </td>    
+</form>
+</table>
+</div>
+</body>
+</html>
