@@ -370,6 +370,26 @@
 					  console.log('running');
 					})
 			}	
+
+		- Express 
+
 		
 */
-console.log(module);
+var express = require('express')
+// 创建服务 http.createServer
+var app = express()
+
+app.get('/',function(req,res){
+	res.send('hello express')
+})
+
+app.get('/about',function(req,res){
+	res.send('hello about')
+})
+
+// 公开目录,让用户可以访问到里面的资源
+app.use('/public/',express.static('./public/'))
+
+app.listen(3000,function(){
+	console.log('app is runing at port 3000');
+})
