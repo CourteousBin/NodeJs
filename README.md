@@ -662,11 +662,136 @@ Url {
 
 ## Express
 
+>Express 是一个基于 Node.js 平台的极简、灵活的 web 应用开发框架，它提供一系列强大的特性，帮助你创建各种 Web 和移动设备应用。
+
 >作者:[TJ Holowaychuk](https://github.com/tj)
 
+**快速上手**
 
+```javascript
+var express = require('express')
+// 创建服务 http.createServer
+var app = express()
 
-### 代码规范
+app.get('/',function(req,res){
+  res.send('hello express')
+})
+
+app.get('/about',function(req,res){
+  res.send('hello about')
+})
+
+// 公开目录,让用户可以访问到里面的资源
+app.use('/public/',express.static('./public/'))
+
+app.listen(3000,function(){
+  console.log('app is runing at port 3000');
+})
+```
+
+**基本路由**
+
+- 请求方法
+- 请求路径
+- 处理函数
+
+```javascript
+app.get('/',function(req,res){
+  res.send('hello express')
+})
+
+app.post('/about',function(req,res){
+  res.send('hello about')
+})
+```
+
+**静态服务**
+
+公开目录，让用户可以访问到里面的资源。
+
+```javascript
+// 当以 public 开头的时候 , 去 ./public/ 目录中找相对应的资源
+  // 127.0.0.1:3000/public/img/images.jpg
+app.use('/public/',express.static('./public/'))
+
+// 省略 路由中 public 直接访问资源
+  // 127.0.0.1:3000/img/images.jpg
+app.use(express.static('./public/'))
+```
+
+[阅读更多](http://www.expressjs.com.cn/starter/static-files.html)
+
+---
+
+## nodemon 
+
+>Nodemon is a utility that will monitor for any changes in your source and automatically restart your server. 
+
+>[nodemon reload, automatically](http://nodemon.io/)
+
+**Installation**
+
+```
+npm install -g nodemon
+```
+
+**Usage**
+
+```
+nodemon [your node app]
+```
+
+---
+
+## 在 `Express` 中配置 `art-template` 模板引擎
+
+**install**
+
+```
+npm install --save art-template
+npm install --save express-art-template
+```
+
+**example**
+
+```javascript
+var express = require('express');
+
+var app = express();
+
+// 配置 art-tempalte 模板引擎
+// 第一个参数表示,当渲染以 .art 结尾的文件时候,使用 art-tempate 模板引擎
+// app.engine('art', require('express-art-template'));
+
+// 也可以配置成 Html , 这样也可以在html赋值
+app.engine('html', require('express-art-template'));
+
+// Express 为 Respnse 响应对象提供了一个方法: render
+// render 方法默认是不可以使用,但是如果配置了模板引擎就可以使用
+// res.render('模板名',{模板数据})
+// 模板名 不能写路径 , 默认会去项目中 views 目录查找模板文件
+app.get('/', function (req, res) {
+    res.render('404.art', {
+        user: {
+            name: 'aui',
+            tags: ['art', 'template', 'nodejs']
+        }
+    });
+});
+
+// 配置成 html, 直接赋值在html
+app.get('/admin', function (req, res) {
+    res.render('admin/admin.html', {
+        title: '管理系统'
+    });
+});
+
+app.listen(3000,function(){
+  console.log('app is runing at port 3000');
+})
+```
+
+## 代码规范
 
 [JavaScript Standard Style 代码风格(推荐)](https://standardjs.com/readme-zhcn.html)
 

@@ -372,23 +372,62 @@
 			}	
 
 		- Express 
+			- demo {
+					var express = require('express')
+					// 创建服务 http.createServer
+					var app = express()
+
+					app.get('/',function(req,res){
+						res.send('hello express')
+					})
+
+					app.get('/about',function(req,res){
+						res.send('hello about')
+					})
+
+					// 公开目录,让用户可以访问到里面的资源
+					app.use('/public/',express.static('./public/'))
+
+					app.listen(3000,function(){
+						console.log('app is runing at port 3000');
+					})	
+			}
+
+		- nodemon 
+			- 更改代码自动刷新,不再需要手动刷新
+			- ctrl + s 保存后自动刷新	
 
 		
 */
-var express = require('express')
-// 创建服务 http.createServer
-var app = express()
+var express = require('express');
 
-app.get('/',function(req,res){
-	res.send('hello express')
-})
+var app = express();
 
-app.get('/about',function(req,res){
-	res.send('hello about')
-})
+// 配置 art-tempalte 模板引擎
+// 第一个参数表示,当渲染以 .art 结尾的文件时候,使用 art-tempate 模板引擎
+// app.engine('art', require('express-art-template'));
 
-// 公开目录,让用户可以访问到里面的资源
-app.use('/public/',express.static('./public/'))
+// 也可以配置成 Html
+app.engine('html', require('express-art-template'));
+
+// Express 为 Respnse 响应对象提供了一个方法: render
+// render 方法默认是不可以使用,但是如果配置了模板引擎就可以使用
+// res.render('模板名',{模板数据})
+// 模板名 不能写路径 , 默认会去项目中 views 目录查找模板文件
+app.get('/', function (req, res) {
+    res.render('404.art', {
+        user: {
+            name: 'aui',
+            tags: ['art', 'template', 'nodejs']
+        }
+    });
+});
+
+app.get('/admin', function (req, res) {
+    res.render('admin/admin.html', {
+        title: '管理系统'
+    });
+});
 
 app.listen(3000,function(){
 	console.log('app is runing at port 3000');
