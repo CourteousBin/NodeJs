@@ -397,38 +397,107 @@
 			- 更改代码自动刷新,不再需要手动刷新
 			- ctrl + s 保存后自动刷新	
 
+		- express + art-template
+			- Case {
+					var express = require('express');
+
+					var app = express();
+
+					// 配置 art-tempalte 模板引擎
+					// 第一个参数表示,当渲染以 .art 结尾的文件时候,使用 art-tempate 模板引擎
+					// app.engine('art', require('express-art-template'));
+
+					// 也可以配置成 Html
+					app.engine('html', require('express-art-template'));
+
+					// Express 为 Respnse 响应对象提供了一个方法: render
+					// render 方法默认是不可以使用,但是如果配置了模板引擎就可以使用
+					// res.render('模板名',{模板数据})
+					// 模板名 不能写路径 , 默认会去项目中 views 目录查找模板文件
+					app.get('/', function (req, res) {
+					    res.render('404.art', {
+					        user: {
+					            name: 'aui',
+					            tags: ['art', 'template', 'nodejs']
+					        }
+					    });
+					});
+
+					app.get('/admin', function (req, res) {
+					    res.render('admin/admin.html', {
+					        title: '管理系统'
+					    });
+					});
+
+					app.listen(3000,function(){
+						console.log('app is runing at port 3000');
+					})
+			}
+
+			- post {
+					var express = require('express');
+
+					var bodyParser = require('body-parser');
+
+					var app = express();
+
+					app.use('/public/',express.static('./public/'));
+
+					app.engine('html', require('express-art-template'));
+
+					// 配置 post
+					app.use(bodyParser.urlencoded({ extended: false }));
+					app.use(bodyParser.json());
+
+					var comments = [
+						{
+						  name:'a',
+						  message:'test',
+						  dateTime:'2018-6-18'
+						},
+						{
+						  name:'a',
+						  message:'test',
+						  dateTime:'2018-6-18'
+						},
+						{
+						  name:'a',
+						  message:'test',
+						  dateTime:'2018-6-18'
+						},
+						{
+						  name:'a',
+						  message:'test',
+						  dateTime:'2018-6-18'
+						},
+					];
+
+					app.get('/', function (req, res) {
+					    res.render('index.html', {
+					        comments:comments
+					    });
+					});
+
+					// 路劲
+					app.get('/post', function (req, res) {
+						res.render('post.html')
+					});
+
+					// 获得表单信息
+					app.post('/post', function (req, res) {
+						var comment = req.body
+
+					    comment.dateTime = '2018年6月18日17:23:33'
+
+					    comments.unshift(comment)
+
+					    res.redirect('/')
+					});
+
+					app.listen(3000,function(){
+						console.log('app is runing at port 3000');
+					})	
+			}	
+
 		
 */
-var express = require('express');
-
-var app = express();
-
-// 配置 art-tempalte 模板引擎
-// 第一个参数表示,当渲染以 .art 结尾的文件时候,使用 art-tempate 模板引擎
-// app.engine('art', require('express-art-template'));
-
-// 也可以配置成 Html
-app.engine('html', require('express-art-template'));
-
-// Express 为 Respnse 响应对象提供了一个方法: render
-// render 方法默认是不可以使用,但是如果配置了模板引擎就可以使用
-// res.render('模板名',{模板数据})
-// 模板名 不能写路径 , 默认会去项目中 views 目录查找模板文件
-app.get('/', function (req, res) {
-    res.render('404.art', {
-        user: {
-            name: 'aui',
-            tags: ['art', 'template', 'nodejs']
-        }
-    });
-});
-
-app.get('/admin', function (req, res) {
-    res.render('admin/admin.html', {
-        title: '管理系统'
-    });
-});
-
-app.listen(3000,function(){
-	console.log('app is runing at port 3000');
-})

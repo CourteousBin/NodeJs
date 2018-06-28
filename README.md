@@ -723,27 +723,7 @@ app.use(express.static('./public/'))
 
 ---
 
-## nodemon 
-
->Nodemon is a utility that will monitor for any changes in your source and automatically restart your server. 
-
->[nodemon reload, automatically](http://nodemon.io/)
-
-**Installation**
-
-```
-npm install -g nodemon
-```
-
-**Usage**
-
-```
-nodemon [your node app]
-```
-
----
-
-## 在 `Express` 中配置 `art-template` 模板引擎
+### 在 `Express` 中配置 `art-template` 模板引擎
 
 **install**
 
@@ -790,6 +770,63 @@ app.listen(3000,function(){
   console.log('app is runing at port 3000');
 })
 ```
+
+### 在 `Express` 使用 `POST` 接收数据
+
+在 `Express` 框架中，并没有内置获取表单 POST 请求的 API ，我们需要使用第三方 **中间件**。
+
+#### body-parser
+
+**Installation**
+
+```
+$ npm install --save body-parser
+```
+
+**Examples**
+
+```javascript
+var express = require('express')
+var bodyParser = require('body-parser')
+
+var app = express()
+
+// 配置 body-parser
+// 只要加入这个配置,则在 req 请求对象上会多一个属性:body
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
+
+app.use(function (req, res) {
+  res.setHeader('Content-Type', 'text/plain')
+  res.write('you posted:\n')
+  // 可以通过 req.body 来获取表单 POST 请求体数据
+  res.end(JSON.stringify(req.body, null, 2))
+})
+```
+
+
+## nodemon 
+
+>Nodemon is a utility that will monitor for any changes in your source and automatically restart your server. 
+
+>[nodemon reload, automatically](http://nodemon.io/)
+
+**Installation**
+
+```
+npm install -g nodemon
+```
+
+**Usage**
+
+```
+nodemon [your node app]
+```
+
+---
 
 ## 代码规范
 
