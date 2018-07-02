@@ -37,6 +37,7 @@
     "acorn": "^5.7.1",
     "art-template": "^4.12.2",
     "body-parser": "^1.18.3",
+    "bootstrap": "^3.3.7",
     "camel-case": "^3.0.0",
     "clean-css": "^4.1.11",
     "commander": "^2.15.1",
