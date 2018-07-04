@@ -7,5 +7,5 @@
 		{"id":5,"name":"bin","gender":0,"age":"21","hobbies":"兵乓球"},
 		{"id":6,"name":"bin","gender":0,"age":"21","hobbies":"马拉松"},
 		{"id":7,"name":"bin","gender":0,"age":"21","hobbies":"写代码"},
-	],
+	]
 }

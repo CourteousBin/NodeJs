@@ -508,7 +508,8 @@ var express = require('express')
 
 var app = express()
 
-var fs = require('fs')
+// 路由模块，自己写的独立模块
+var router = require('./router.js')
 
 // 开发静态资源
 app.use('/node_modules/', express.static('./node_modules/'))
@@ -516,21 +517,8 @@ app.use('/public/', express.static('./public/'))
 
 app.engine('html', require('express-art-template'))
 
-app.get('/', function(req, res) {
-	// 第二个参数是可选的,读取的文件按照 utf8 编码
-	fs.readFile('./public/db/curdDb.json','utf8',function(err,data){
-		// var students = JSON.parse(data).students;
-		console.log(typeof data);
-	})
-    res.render('./curd/index.html', {
-        fruits: [
-            '苹果',
-            '香蕉',
-            '菠萝',
-            '西瓜'
-        ]
-    })
-})
+// 传参，因为独立模块需要使用到 express
+router(app)
 
 app.listen(3000, function() {
     console.log('app is runing at port 3000')
