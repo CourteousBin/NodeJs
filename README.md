@@ -807,6 +807,377 @@ app.use(function (req, res) {
 })
 ```
 
+## 模块化编程案例
+
+| 请求方法 |     请求路径     | get 参数 |           post 参数            |       备注       |
+|----------|------------------|----------|--------------------------------|------------------|
+| GET      | /studens         |          |                                | 渲染首页         |
+| GET      | /students/new    |          |                                | 渲染添加学生页面 |
+| POST     | /studens/new     |          | name、age、gender、hobbies     | 处理添加学生请求 |
+| GET      | /students/edit   | id       |                                | 渲染编辑页面     |
+| POST     | /studens/edit    |          | id、name、age、gender、hobbies | 处理编辑请求     |
+| GET      | /students/delete | id       |                                | 处理删除请求     |
+|          |                  |          |                                |                  |
+
+文件目录
+```
+project
+│   app.js(入口模块,配置服务)
+│   router.js(路由模块)
+│
+└───public
+│   │  
+│   │
+│   └───db
+│       │   curdDb.json(模拟数据)
+│       │   student.js(封装curd操作)
+│   
+└───view
+|   │   
+|   │   
+|   └───curd
+|       |   index.html(主页面)
+|       |   edit.html(修改页面)
+|       |   new.html(新增页面)
+```
+
+### app.js
+
+```javascript
+// app.js 入门模块
+  // 职责:
+  // 创建服务
+  // 做一些服务配置
+    // 模板引擎
+    // Body-parser 解析表单 post
+    // 提供静态资源服务
+  // 挂载路由
+  // 监听端口启动服务 
+var express = require('express')
+
+var bodyParser = require('body-parser');
+
+var app = express()
+
+// 路由模块，自己写的独立模块
+var router = require('./router.js')
+
+// 开发静态资源
+app.use('/node_modules/', express.static('./node_modules/'))
+app.use('/public/', express.static('./public/'))
+
+app.engine('html', require('express-art-template'))
+
+// 配置 post
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// 原生路由
+  // 传参，因为独立模块需要使用到 express
+  // router(app)
+
+// Express 方法
+  // 把路由容器挂载到 app 中
+  app.use(router)
+
+app.listen(3000, function() {
+    console.log('app is runing at port 3000')
+})
+```
+
+### router.js
+
+```javascript
+// 原生 node 模块化
+// 要运用到 fs系统 模块
+// var fs = require('fs')
+
+// // 导出方法
+// module.exports = function(app){
+
+
+//  app.get('/', function(req, res) {
+//    // 第二个参数是可选的,读取的文件按照 utf8 编码
+//    fs.readFile('./public/db/curdDb.json','utf8',function(err,data){
+
+
+//      res.render('./curd/index.html', {
+//            fruits: [
+//                '苹果',
+//                '香蕉',
+//                '菠萝',
+//                '西瓜'
+//            ],
+//            students: [
+//          {"id":1,"name":"bin","gender":0,"age":"21","hobbies":"篮球"},
+//          {"id":2,"name":"bin","gender":0,"age":"21","hobbies":"足球"},
+//          {"id":3,"name":"bin","gender":0,"age":"21","hobbies":"排球"},
+//          {"id":4,"name":"bin","gender":0,"age":"21","hobbies":"羽毛球"},
+//          {"id":5,"name":"bin","gender":0,"age":"21","hobbies":"兵乓球"},
+//          {"id":6,"name":"bin","gender":0,"age":"21","hobbies":"马拉松"},
+//          {"id":7,"name":"bin","gender":0,"age":"21","hobbies":"写代码"},
+//        ]
+//        })
+//    })
+
+//  })
+
+// }
+
+// Express 封装路由
+
+/**
+ * router.js 路由模块
+ * 职责:
+ *  处理模块
+ * 模块职责要单一
+ * 模块化的目的就是增强项目可维护性
+ */
+var fs = require('fs')
+
+var express = require('express')
+
+// 加载数据库操作方法
+var Students = require('./public/db/student.js')
+
+// 1.创建一个路由容器
+var router = express.Router()
+
+// 2.把路由都挂载在 router 容器中
+router.get('/students', function(req, res) {
+
+    Students.find(function(err,students){
+
+      if(err){
+        return res.status(500).send('server error')
+      }
+      res.render('./curd/index.html', {
+           fruits: [
+               '苹果',
+               '香蕉',
+               '菠萝',
+               '西瓜'
+           ],
+           students: students
+       })
+    })
+})
+
+router.get('/students/new', function(req, res) {
+    res.render('./curd/new.html')
+})
+
+router.post('/students/new', function(req, res) {
+    // 1.先获取表单数据
+    Students.save(req.body,function(err){
+      if(err){
+        return res.status(500).send('server error')
+      }
+      res.redirect('/students')
+    })
+    // 2.处理
+    // 3.响应
+})
+
+router.get('/students/edit', function(req, res) {
+  Students.findById(parseInt(req.query.id),function(err,student){
+    if(err){
+      return res.status(500).send('server error')
+    }
+
+    res.render('./curd/edit.html',{
+      student:student
+    })
+  })
+})
+
+router.post('/students/edit', function(req, res) {
+  Students.updateById(req.body,function(err){
+    if(err){
+      return res.status(500).send('server error')
+    }
+    res.redirect('/students')
+  })
+})
+
+router.get('/students/delete', function (req, res) {
+  // 1. 获取要删除的 id
+  // 2. 根据 id 执行删除操作
+  // 3. 根据操作结果发送响应数据
+
+  Student.deleteById(req.query.id, function (err) {
+    if (err) {
+      return res.status(500).send('Server error.')
+    }
+    res.redirect('/students')
+  })
+})
+
+// 第三步 把 router 导出
+module.exports = router
+```
+
+### student.js
+
+```javascript
+/*
+  数据操作模块
+  职责:
+    操作文件中的数据 , 只处理数据 不关心业务
+*/
+
+/*
+  知识点:
+    - 回调函数
+    - 作用
+      - 获取异步从操作的结果
+      - Case {
+        function fn(callback){
+          setTimeout(function(){
+            var data = 'hello'
+            callback(data)
+          }, 1000);
+        }
+
+        // 如果需要获取一个函数中异步的操作结果,必须要通过回调函数来获取
+        fn(function(data){
+          console.log(data);
+        })
+      }
+*/
+
+
+var fs = require('fs')
+var dbPath = './public/db/curdDb.json';
+// 获取所有学生列表
+exports.find = function(callback){
+  fs.readFile(dbPath,'utf8',function(err,data){
+    if(err){
+      return callback(err)
+    }
+    callback(null,JSON.parse(data).students)
+  });
+}
+
+// 根据id查找信息
+exports.findById = function(id,callback){
+  fs.readFile(dbPath,'utf8',function(err,data){
+    if(err){
+      return callback(err)
+    }
+    var students = JSON.parse(data).students
+
+    var ret = students.find(function(item){
+      return item.id === parseInt(id)
+    })
+
+    callback(null,ret)
+  });
+}
+
+// 添加学生
+exports.save = function(student,callback){
+  fs.readFile(dbPath,'utf8',function(err,data){
+    if(err){
+      return callback(err)
+    }
+
+    // 读取json文件
+    var students = JSON.parse(data).students
+
+    // 处理 id 唯一性
+    student.id = students[students.length-1].id + 1
+
+    // 追加新数据
+    students.push(student)
+
+    // 把新数据转换为字符串
+    var result = JSON.stringify({
+      students:students
+    })
+
+    // 写进json文件
+    fs.writeFile(dbPath, result, function(err){
+      if(err){
+        return callback(err)
+      }
+      // 执行回调
+      callback(null)
+    });
+  });
+}
+// 更新学生
+exports.updateById = function(){
+  fs.readFile(dbPath,'utf8',function(err,data){
+    if(err){
+      return callback(err)
+    }
+    var students = JSON.parse(data).students
+
+    student.id = parseInt(student.id)
+
+    // ES6 find,接受函数作参数
+    // 当某个遍历相符合条件 find 会终止遍历 同时返回遍历项
+    var stu = students.find(function(item){
+      return item.id === student.id
+    })
+
+    // 遍历拷贝对象
+    for(var key in student){
+      stu[key] = student[key]
+    }
+
+    // 把新数据转换为字符串
+    var result = JSON.stringify({
+      students:students
+    })
+
+    // 写进json文件
+    fs.writeFile(dbPath, result, function(err){
+      if(err){
+        return callback(err)
+      }
+      // 执行回调
+      callback(null)
+    });
+  });
+}
+// 删除学生
+exports.deleteById = function (id, callback) {
+  fs.readFile(dbPath, 'utf8', function (err, data) {
+    if (err) {
+      return callback(err)
+    }
+    var students = JSON.parse(data).students
+
+    // findIndex 方法专门用来根据条件查找元素的下标
+    var deleteId = students.findIndex(function (item) {
+      return item.id === parseInt(id)
+    })
+
+    // 根据下标从数组中删除对应的学生对象
+    students.splice(deleteId, 1)
+
+    // 把对象数据转换为字符串
+    var fileData = JSON.stringify({
+      students: students
+    })
+
+    // 把字符串保存到文件中
+    fs.writeFile(dbPath, fileData, function (err) {
+      if (err) {
+        // 错误就是把错误对象传递给它
+        return callback(err)
+      }
+      // 成功就没错，所以错误对象是 null
+      callback(null)
+    })
+  })
+}
+
+```
+
+---
 
 ## nodemon 
 
@@ -825,6 +1196,12 @@ npm install -g nodemon
 ```
 nodemon [your node app]
 ```
+
+---
+
+## MongoDB
+
+
 
 ---
 

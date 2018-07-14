@@ -1,11 +1,59 @@
 {
-	"students":[
-		{"id":1,"name":"bin","gender":0,"age":"21","hobbies":"篮球"},
-		{"id":2,"name":"bin","gender":0,"age":"21","hobbies":"足球"},
-		{"id":3,"name":"bin","gender":0,"age":"21","hobbies":"排球"},
-		{"id":4,"name":"bin","gender":0,"age":"21","hobbies":"羽毛球"},
-		{"id":5,"name":"bin","gender":0,"age":"21","hobbies":"兵乓球"},
-		{"id":6,"name":"bin","gender":0,"age":"21","hobbies":"马拉松"},
-		{"id":7,"name":"bin","gender":0,"age":"21","hobbies":"写代码"},
-	]
+    "students": [
+    {
+        "id": 1,
+        "name": "bin",
+        "gender": 0,
+        "age": "21",
+        "hobbies": "篮球"
+    },
+    {
+        "id": 2,
+        "name": "bin",
+        "gender": 0,
+        "age": "21",
+        "hobbies": "足球"
+    },
+    {
+        "id": 3,
+        "name": "bin",
+        "gender": 0,
+        "age": "21",
+        "hobbies": "排球"
+    },
+    {
+        "id": 4,
+        "name": "bin",
+        "gender": 0,
+        "age": "21",
+        "hobbies": "羽毛球"
+    },
+    {
+        "id": 5,
+        "name": "bin",
+        "gender": 0,
+        "age": "21",
+        "hobbies": "兵乓球"
+    },
+    {
+        "id": 6,
+        "name": "bin",
+        "gender": 0,
+        "age": "21",
+        "hobbies": "马拉松"
+    },
+    {
+        "id": 7,
+        "name": "bin",
+        "gender": 0,
+        "age": "21",
+        "hobbies": "写代码"
+    },
+    {
+        "id": 8,
+        "name": "Bin",
+        "gender": 0,
+        "age": "21",
+        "hobbies": "篮球"
+    }]
 }
