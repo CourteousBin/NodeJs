@@ -500,47 +500,169 @@
 			}	
 
 			- curd
+				Case {
+						// app.js 入门模块
+						// 职责:
+						// 创建服务
+						// 做一些服务配置
+							// 模板引擎
+							// Body-parser 解析表单 post
+							// 提供静态资源服务
+						// 挂载路由
+						// 监听端口启动服务 
+					var express = require('express')
 
+					var bodyParser = require('body-parser');
+
+					var app = express()
+
+					// 路由模块，自己写的独立模块
+					var router = require('./router.js')
+
+					// 开发静态资源
+					app.use('/node_modules/', express.static('./node_modules/'))
+					app.use('/public/', express.static('./public/'))
+
+					app.engine('html', require('express-art-template'))
+
+					// 配置 post
+					app.use(bodyParser.urlencoded({ extended: false }));
+					app.use(bodyParser.json());
+
+					// 原生路由
+						// 传参，因为独立模块需要使用到 express
+						// router(app)
+
+					// Express 方法
+						// 把路由容器挂载到 app 中
+						app.use(router)
+
+					app.listen(3000, function() {
+					    console.log('app is runing at port 3000')
+					})
+
+
+				}
 
 		
+		- MongoDB
+			- case {
+				// 官方DEMO
+					const mongoose = require('mongoose');
+
+					// 链接数据库
+					mongoose.connect('mongodb://localhost/test');
+
+					// 创建一个模型,就是在设计数据库, mongodb 只需要在代码中设计数据库就可以了
+					const Cat = mongoose.model('Cat', { name: String });
+
+					// 实例化一个 cat
+					const kitty = new Cat({ name: 'Zildjian' });
+
+					// 持久化保存 kitty 实例
+					kitty.save().then(() => console.log('meow'));	
+			}
+			
+			- 增删改查
+			- case {
+					var mongoose = require('mongoose')
+
+					// 设计表结构
+					var Schema = mongoose.Schema
+
+					// 链接数据库
+					mongoose.connect('mongodb://localhost/test')
+
+					// 设计表结构
+					// 字段名称就是表结构中属性名称
+					// 约束的目的是为了保证数据的完整性 不能有脏数据
+					var blogSchema = new Schema({
+					    title: {
+					        type: String,
+					        required: true // 约束 , 必填项
+					    },
+					    author: String,
+					    body: String
+					})
+
+					// 将文档结构发布为 模型
+					// 第一个参数 用来表示数据库名称 , mongoose 会将大写名词 转换成 小写复数 
+					// BLog -> blogs
+					// 第二个参数就是架构
+					// 返回值是模型构造函数
+					var Blog = mongoose.model('Blog', blogSchema);
+
+
+					// 新增数据
+					var article = new Blog({
+						title:'学习node',
+						author:'test',
+						body:'node'
+					})
+
+					article.save(function(err,ret){
+						if(err){
+							console.log('失败');
+						}else{
+							console.log(ret);
+							console.log('成功');
+						}
+					})
+
+					// 查询数据 
+						// 查询所有
+						Blog.find(function(err, ret) {
+						    if (err) {
+						        console.log('失败');
+						    } else {
+						        console.log(ret);
+						    }
+						})
+
+						// 按条件查询
+							// find 返回是一个数组
+							// findOne 返回的是一个对象
+						Blog.findOne({author:'Bin,'},function(err,ret){
+							console.log(ret);
+						})	
+
+
+					// 删除数据 
+						Blog.remove({
+							author:'test'
+						},function(err,ret){
+							if(err){
+								console.log('删除失败');
+							}else{
+								console.log(ret);
+							}
+						})
+
+					// 更新数据库
+						Blog.findByIdAndUpdate('5b4b1f7c3d822f32606de4f2',{
+							title:'更新数据库'
+						},function(err,ret){
+							console.log(ret);
+						})
+
+
+			}		
 */
 
-// app.js 入门模块
-	// 职责:
-	// 创建服务
-	// 做一些服务配置
-		// 模板引擎
-		// Body-parser 解析表单 post
-		// 提供静态资源服务
-	// 挂载路由
-	// 监听端口启动服务 
-var express = require('express')
+// Promise
 
-var bodyParser = require('body-parser');
+// ES6 一个 API
+// promise 是一个构造函数
 
-var app = express()
+var fs = require('fs')
 
-// 路由模块，自己写的独立模块
-var router = require('./router.js')
-
-// 开发静态资源
-app.use('/node_modules/', express.static('./node_modules/'))
-app.use('/public/', express.static('./public/'))
-
-app.engine('html', require('express-art-template'))
-
-// 配置 post
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
-// 原生路由
-	// 传参，因为独立模块需要使用到 express
-	// router(app)
-
-// Express 方法
-	// 把路由容器挂载到 app 中
-	app.use(router)
-
-app.listen(3000, function() {
-    console.log('app is runing at port 3000')
+// 创建一个容器
+var p1 = new promise(function(resolve,reject){
+	fs.read('./a.txt','utf8',function(err,data){
+	  if(err){
+	  	reject(err)
+	  }else {
+	  	resolve(data)
+	  }
+	})
 })

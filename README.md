@@ -1201,6 +1201,398 @@ nodemon [your node app]
 
 ## MongoDB
 
+### 简介
+
+MongoDB 是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。
+
+MongoDB 是一个介于关系数据库和非关系数据库之间的产品，**是非关系数据库当中功能最丰富，最像关系数据库的**。
+
+### 菲关系型数据库简介
+
+**NoSQL(NoSQL = Not Only SQL )，意即"不仅仅是SQL"。**
+
+NoSQL，指的是非关系型的数据库。NoSQL有时也称作Not Only SQL的缩写，是对不同于传统的关系型数据库的数据库管理系统的统称。
+
+非关系型数据库是基于 CAP 模型
+
+#### CAP模型
+
+在计算机科学中, CAP定理（CAP theorem）, 又被称作 布鲁尔定理（Brewer's theorem）, 它指出对于一个分布式计算系统来说，**不可能同时满足以下三点**:
+
+- 一致性(Consistency) (所有节点在同一时间具有相同的数据)
+- 可用性(Availability) (保证每个请求不管成功或者失败都有响应)
+- 分隔容忍(Partition tolerance) (系统中任意信息的丢失或失败不会影响系统的继续运作)
+
+CAP理论的核心是：一个分布式系统不可能同时很好的满足一致性，可用性和分区容错性这三个需求，最多只能同时较好的满足两个。
+
+因此，根据 CAP 原理将 NoSQL 数据库分成了满足 CA 原则、满足 CP 原则和满足 AP 原则三 大类：
+
+- CA - 单点集群，满足一致性，可用性的系统，通常在可扩展性上不太强大。
+- CP - 满足一致性，分区容忍性的系统，通常性能不是特别高。
+- AP - 满足可用性，分区容忍性的系统，通常可能对一致性要求低一些。
+
+#### NoSQL的优点/缺点
+
+优点:
+
+- 高可扩展性
+- 分布式计算
+- 低成本
+- 架构的灵活性，半结构化数据
+- 没有复杂的关系
+
+缺点:
+
+- 没有标准化
+- 有限的查询功能（到目前为止）
+- 最终一致是不直观的程序
+
+### 关系型数据库简介
+
+关系型数据库遵循 ACID 规则
+
+#### ACID模型
+
+事务在英文中是transaction，和现实世界中的交易很类似，它有如下四个特性：
+
+1、A (Atomicity) 原子性
+
+原子性很容易理解，也就是说事务里的所有操作要么全部做完，要么都不做，事务成功的条件是事务里的所有操作都成功，只要有一个操作失败，整个事务就失败，需要回滚。
+
+比如银行转账，从A账户转100元至B账户，分为两个步骤：1）从A账户取100元；2）存入100元至B账户。这两步要么一起完成，要么一起不完成，如果只完成第一步，第二步失败，钱会莫名其妙少了100元。
+
+2、C (Consistency) 一致性
+
+一致性也比较容易理解，也就是说数据库要一直处于一致的状态，事务的运行不会改变数据库原本的一致性约束。
+
+例如现有完整性约束a+b=10，如果一个事务改变了a，那么必须得改变b，使得事务结束后依然满足a+b=10，否则事务失败。
+
+3、I (Isolation) 独立性
+
+所谓的独立性是指并发的事务之间不会互相影响，如果一个事务要访问的数据正在被另外一个事务修改，只要另外一个事务未提交，它所访问的数据就不受未提交事务的影响。
+
+比如现在有个交易是从A账户转100元至B账户，在这个交易还未完成的情况下，如果此时B查询自己的账户，是看不到新增加的100元的。
+
+4、D (Durability) 持久性
+
+持久性是指一旦事务提交后，它所做的修改将会永久的保存在数据库上，即使出现宕机也不会丢失。
+
+
+#### 关系数据库管理系统(Relational Database Management System)的特点：
+
+- 1.数据以表格的形式出现
+
+- 2.每行为各种记录名称
+
+- 3.每列为记录名称所对应的数据域
+
+- 4.许多的行和列组成一张表单
+
+- 5.若干的表单组成database
+
+### 区别与优劣
+
+1.实质。
+非关系型数据库的实质：非关系型数据库产品是传统关系型数据库的功能阉割版本，通过减少用不到或很少用的功能，来大幅度提高产品性能。
+
+2.价格。
+目前基本上大部分主流的非关系型数据库都是免费的。而比较有名气的关系型数据库，比如Oracle、DB2、MSSQL是收费的。虽然Mysql免费，但它需要做很多工作才能正式用于生产。
+
+3.功能。
+实际开发中，有很多业务需求，其实并不需要完整的关系型数据库功能，非关系型数据库的功能就足够使用了。这种情况下，使用性能更高、成本更低的非关系型数据库当然是更明智的选择。
+
+### MongoDB 概念解析
+
+| SQL术语/概念 | MongoDB术语/概念  | 解释/说明 |
+|----|:-----: |:-----------------:|
+| database  | database | 数据库 |
+| table  | collection | 数据库表/集合 |
+| row  | document | 数据记录行/文档 |
+| column  | field | 数据字段/域 |
+| index  | index | 索引 |
+| table joins   |  | 表连接,MongoDB不支持 |
+| primary key   | primary key  |  主键,MongoDB自动将_id字段设置为主键 |
+
+<div align="center"> <img src="https://raw.githubusercontent.com/CourteousBin/photoRep/master/images/10-7-15-4.png" width=""/> </div>
+
+**MongoDB 存储数据结构**
+
+```javascript
+ {
+  // 数据库
+  qq:{
+    // 集合 就是 MySQL 中的表
+    users:[
+      // 文档 MySQL 表记录
+      {name:'a',age:18},
+      {name:'b',age:19},
+      {name:'c',age:18},
+    ],
+    product:[
+    ]
+  },
+  // 数据库
+  taobao:{
+
+  },
+  // 数据库
+  baidu:{
+
+  }
+}
+```
+
+### 安装
+
+(MongoDB官方下载)[https://www.mongodb.com/download-center?jmp=nav#community]
+
+安装过程有一个坑:
+
+<div align="center"> <img src="https://raw.githubusercontent.com/CourteousBin/photoRep/master/images/10-7-15-1.png" width=""/> </div>
+
+解决:
+
+<div align="center"> <img src="https://raw.githubusercontent.com/CourteousBin/photoRep/master/images/10-7-15-2.jpg" width=""/> </div>
+
+安装成功:
+
+<div align="center"> <img src="https://raw.githubusercontent.com/CourteousBin/photoRep/master/images/10-7-15-3.png" width=""/> </div>
+
+### 启动和关闭数据库服务
+
+启动:
+
+```
+# 第一次启动 手动创建数据存储目录文件 c:/data/db
+# 在cmd 执行 mongond , 开启服务
+mongond 
+```
+
+如果想修改默认数据存储路径
+
+```
+mongod --dbpath=数据存储路径
+```
+
+停止:
+
+``` 
+在开启服务控制台 Ctrl+c 停止服务
+
+关闭服务控制台也可以
+```
+
+链接数据库:
+
+```
+# 另外开启一个控制台
+mongo
+```
+
+退出
+
+```
+exit
+```
+
+### 基本命令
+
+```
+show dbs - 查看所有数据库
+
+db - 查看当前操作的数据库
+
+use 数据库名称 - 切换到指定数据库(如果没有自动创建) 
+
+```
+
+### 在 Node 中如何操作 MongoDB 数据库
+
+#### 使用官方 MongoDB 包来操作
+
+- npm:https://www.npmjs.com/package/mongodb
+
+- gitHub: https://github.com/mongodb/node-mongodb-native
+
+
+#### 使用第三方 mongoose 
+
+第三方包：`mongoose` 基于 MongoDB 官方包做了再一次封装 。
+
+- 官网:http://mongoosejs.com
+
+- 官方指南:http://mongoosejs.com/docs/guide.html
+
+- 官方 API 文档:http://mongoosejs.com/docs/api.html 
+
+##### 起步
+
+```npm
+npm install mongoose
+```
+
+官方 demo :
+```javascript
+const mongoose = require('mongoose');
+
+// 链接数据库
+mongoose.connect('mongodb://localhost/test');
+
+// 创建一个模型,就是在设计数据库, mongodb 只需要在代码中设计数据库就可以了
+const Cat = mongoose.model('Cat', { name: String });
+
+// 实例化一个 cat
+const kitty = new Cat({ name: 'Zildjian' });
+
+// 持久化保存 kitty 实例
+kitty.save().then(() => console.log('meow'));
+```
+
+新增数据
+
+```javascript
+var mongoose = require('mongoose')
+
+// 设计表结构
+var Schema = mongoose.Schema
+
+// 链接数据库
+mongoose.connect('mongodb://localhost/test')
+
+// 设计表结构
+// 字段名称就是表结构中属性名称
+// 约束的目的是为了保证数据的完整性 不能有脏数据
+var blogSchema = new Schema({
+    title: {
+        type: String,
+        required: true // 约束 , 必填项
+    },
+    author: String,
+    body: String
+})
+
+// 将文档结构发布为 模型
+// 第一个参数 用来表示数据库名称 , mongoose 会将大写名词 转换成 小写复数 
+// BLog -> blogs
+// 第二个参数就是架构
+// 返回值是模型构造函数
+var Blog = mongoose.model('Blog', blogSchema);
+
+
+// 新增数据
+var article = new Blog({
+  title:'学习node',
+  author:'test',
+  body:'node'
+})
+
+article.save(function(err,ret){
+  if(err){
+    console.log('失败');
+  }else{
+    console.log(ret);
+    console.log('成功');
+  }
+})
+```
+
+查询数据:
+
+```javascript
+// 查询数据 
+  // 查询所有
+  Blog.find(function(err, ret) {
+      if (err) {
+          console.log('失败');
+      } else {
+          console.log(ret);
+      }
+  })
+
+  // 按条件查询
+    // find 返回是一个数组
+    // findOne 返回的是一个对象
+  Blog.findOne({author:'Bin,'},function(err,ret){
+    console.log(ret);
+  })  
+```
+
+删除数据:
+
+```javascript
+  Blog.remove({
+    author:'test'
+  },function(err,ret){
+    if(err){
+      console.log('删除失败');
+    }else{
+      console.log(ret);
+    }
+  })
+```
+
+更新数据:
+
+```javascript
+// 更新数据库
+  Blog.findByIdAndUpdate('5b4b1f7c3d822f32606de4f2',{
+    title:'更新数据库'
+  },function(err,ret){
+    console.log(ret);
+  })
+```
+
+---
+
+## 异步编程 
+
+在JavaScript的世界中，所有代码都是单线程执行的。
+
+由于这个“缺陷”，导致JavaScript的所有网络操作，浏览器事件，都必须是异步执行。异步执行可以用回调函数实现：
+
+```javascript
+function callback() {
+    console.log('Done');
+}
+console.log('before setTimeout()');
+setTimeout(callback, 1000); // 1秒钟后调用callback函数
+console.log('after setTimeout()');
+```
+
+观察上述代码执行，在Chrome的控制台输出可以看到：
+
+```javascript
+before setTimeout()
+after setTimeout()
+(等待1秒后)
+Done
+```
+
+### callback hell (回调地狱)
+
+<div align="center"> <img src="https://raw.githubusercontent.com/CourteousBin/photoRep/master/images/10-7-15-5.jpg" width=""/> </div>
+
+无法保证代码执行顺序
+
+```javascript
+var fs = require('fs')
+
+fs.read('./a.txt','utf8',function(err,data){
+  console.log(data);
+})
+
+fs.read('./b.txt','utf8',function(err,data){
+  console.log(data);
+})
+
+fs.read('./c.txt','utf8',function(err,data){
+  console.log(data);
+})
+
+```
+
+### Promise
+
 
 
 ---
